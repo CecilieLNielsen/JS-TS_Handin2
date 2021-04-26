@@ -36,7 +36,7 @@ describe("## Verify the Friends Facade ##", () => {
   describe("Verify the addFriend method", () => {
     it("It should Add the user Jan", async () => {
       const newFriend = { firstName: "Jan", lastName: "Olsen", email: "jan@b.dk", password: "secret" }
-      const status = await facade.addFriend(newFriend);
+      const status = await facade.createFriendV2(newFriend);
       expect(status).to.be.not.null
       const jan = await friendCollection.findOne({ email: "jan@b.dk" })
       expect(jan.firstName).to.be.equal("Jan")
@@ -46,8 +46,8 @@ describe("## Verify the Friends Facade ##", () => {
   describe("Verify the editFriend method", () => {
     it("It should change firstname to Jannick", async () => {
       const newFirstName = { firstName: "Jannick", lastName: "Green", email: "JonasGreen@gmail.com", password: "secret" }
-      const status = await facade.editFriend("JonasGreen@gmail.com", newFirstName);
-      expect(status.modifiedCount).to.equal(1);
+      const status = await facade.editFriendV2("JonasGreen@gmail.com", newFirstName);
+      expect(status).to.be.not.null
       const editedFriend = await friendCollection.findOne({ email: "JonasGreen@gmail.com" })
       expect(editedFriend.firstName).to.be.equal("Jannick");
     })
@@ -66,19 +66,18 @@ describe("## Verify the Friends Facade ##", () => {
 
   describe("Verify the getAllFriends method", () => {
     it("It should get two friends", async () => {
-      const status = await facade.getAllFriends();
+      const status = await facade.getAllFriendsV2();
       expect(status).to.have.lengthOf(2);
     })
   })
 
   describe("Verify the getFriend method", () => {
     it("It should find Anne Green", async () => {
-      const status = await facade.getFriend("AnneGreen@gmail.com");
+      const status = await facade.getFriendFromEmail("AnneGreen@gmail.com");
       expect(status).to.exist;
     })
     it("It should not find InvalidMail@gmail.com", async () => {
-      const status = await facade.getFriend("InvalidMail@gmail.com");
-      expect(status).to.throw(ApiError);
+      expect(facade.getFriendFromEmail("InvalidMail@gmail.com")).to.be.rejectedWith(ApiError);
     })
   })
 })

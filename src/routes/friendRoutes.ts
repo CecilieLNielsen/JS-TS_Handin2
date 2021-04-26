@@ -20,7 +20,7 @@ router.use(async (req, res, next) => {
 router.post('/', async function (req, res, next) {
   try {
     let newFriend = req.body;
-    const addedFriend = await facade.addFriend(newFriend)
+    const addedFriend = await facade.createFriendV2(newFriend)
     res.json({ addedFriend })
   } catch (err) {
     debug(err)
@@ -33,7 +33,7 @@ router.post('/', async function (req, res, next) {
 })
 
 router.get("/all", async (req: any, res) => {
-  const friends = await facade.getAllFriends();
+  const friends = await facade.getAllFriendsV2();
   const friendsDTO = friends.map(friend => {
     const { firstName, lastName, email } = friend
     return { firstName, lastName, email }
@@ -45,7 +45,7 @@ router.put('/:email', async function (req: any, res, next) {
   try {
     const email = req.params.email; //GET THE USERS EMAIL FROM SOMEWHERE (req.params OR req.credentials.userName)
     let newFriend = req.body;
-    const result = await facade.editFriend(email, newFriend);
+    const result = await facade.editFriendV2(email, newFriend);
     res.json(result);
   } catch (err) {
     debug(err)
@@ -60,11 +60,11 @@ router.get("/find-user/:email", async (req: any, res, next) => {
   const userId = req.params.userid;
   try {
     const userEmail = req.params.email;
-    const friend = await facade.getFriend(userEmail);
+    const friend = await facade.getFriendFromEmail(userEmail);
     if (friend == null) {
       throw new ApiError("user not found", 404)
     }
-    const { firstName, lastName, email, role } = friend;
+    const { firstName, lastName, email } = friend;
     const friendDTO = { firstName, lastName, email }
     res.json(friendDTO);
   } catch (err) {

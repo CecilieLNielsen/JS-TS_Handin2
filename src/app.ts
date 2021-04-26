@@ -1,14 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
-import path from "path"
-dotenv.config()
-import { ApiError } from "./errors/errors"
-
+import path from "path";
+import cors from 'cors';
 import friendsRoutes from "./routes/friendRoutes";
-const debug = require("debug")("app")
+import { ApiError } from "./errors/errors"
 import { Request, Response, NextFunction } from "express"
+import { graphqlHTTP } from 'express-graphql';
+import { schema } from './graphql/schema';
+
+dotenv.config()
+const debug = require("debug")("app")
 
 const app = express()
+app.use(cors());
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  graphiql: true,
+}));
+
 
 app.use(express.json())
 

@@ -4,5 +4,4 @@ export interface IFriend {
   lastName: string
   email: string
   password: string
-  role?: string
 }
