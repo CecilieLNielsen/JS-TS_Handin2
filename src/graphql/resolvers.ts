@@ -1,12 +1,18 @@
 import FriendFacade from '../facades/friendFacade';
 import { IFriend } from '../interfaces/IFriend';
+import PositionFacade from '../facades/positionFacade';
 import { ApiError } from '../errors/errors';
 import { Request } from "express";
 //import fetch from "node-fetch"
 
-
+interface IPositionInput {
+  email: string
+  longitude: number
+  latitude: number
+}
 
 let friendFacade: FriendFacade;
+let positionFacade: PositionFacade;
 
 /*
 We don't have access to app or the Router so we need to set up the facade in another way
@@ -42,6 +48,14 @@ export const resolvers = {
     deleteFriend: async (_: object, { friendEmail }: { friendEmail: string }) => { 
     return friendFacade.deleteFriend(friendEmail)
   },
-}
+  addPosition: async (_: object, { input }: { input: IPositionInput }) => {
+    try {
+      positionFacade.addOrUpdatePosition(input.email, input.longitude, input.latitude)
+      return true
+    } catch (err) {
+      return false
+    }
+  }
+  }
 };
 

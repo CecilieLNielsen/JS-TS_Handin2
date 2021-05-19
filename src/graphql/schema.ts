@@ -26,12 +26,23 @@ const typeDefs = `
         password: String
         email: String!
     }
+
+    input PositionInput {
+        email: String!
+        longitude: Float!
+        latitude: Float!
+
+    }
+
+
     type Mutation {
         createFriend(input: FriendInput): Friend
 
         editFriend (input: FriendEditInput): Friend
 
         deleteFriend (friendEmail: String): Friend
+
+        addPosition(input: PositionInput): Boolean
        
     }
 `;
